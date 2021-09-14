@@ -1,0 +1,16 @@
+---
+- name: Download Docker compose
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-{{ ansible_system | lower }}-{{ ansible_architecture }}"
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Create a symbolic link
+  ansible.builtin.file:
+    src: /usr/local/bin/docker-compose
+    dest: /usr/bin/docker-compose
+    owner: root
+    group: root
+    state: link

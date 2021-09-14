@@ -1,0 +1,10 @@
+---
+manager_hosts: "\
+{% set _manager_hosts = [] %}\
+{% for host in ansible_play_hosts %}\
+  {% if hostvars[host].swarm_role == 'manager' %}\
+    {{ _manager_hosts.append(host) }}\
+  {% endif %}\
+{% endfor %}\
+{{ _manager_hosts }}
+"
