@@ -5,6 +5,7 @@
   ignore_errors: true
   changed_when: false
   register: swarm_check
+  check_mode: false
 
 - block:
     - name: Initialize a swarm
