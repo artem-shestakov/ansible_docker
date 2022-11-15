@@ -2,14 +2,6 @@
 - name: Install Docker | Preparation before installing
   ansible.builtin.include_tasks: "{{ ansible_facts['os_family'] }}.yml"
 
-- name: Install Docker | Install Docker engine
-  ansible.builtin.package:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-    state: present
-
 - name: Install Docker | Create Docker config file
   block:
   - name: Install Docker | Make sure the Docker daemon configuration directory exists.
