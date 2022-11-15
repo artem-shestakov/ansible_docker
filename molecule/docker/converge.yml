@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  vars:
+    docker_daemon_config:
+      data-root: "/docker"
+      log-driver: "json-file"
+      log-opts:
+        max-file: "2"
+        max-size: "100m"
+  roles:
+    - "ansible_docker"

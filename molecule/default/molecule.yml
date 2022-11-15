@@ -1,0 +1,23 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: ${MOLECULE_PLATFORM_IMAGE:-"artemshestakov/almalinux-8-docker:latest"}
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+provisioner:
+  name: ansible
+  inventory:
+    hosts:
+      all:
+        hosts:
+          instance:
+            swarm_role: manager
+verifier:
+  name: ansible

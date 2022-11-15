@@ -1,10 +1,10 @@
 ---
-- name: Install the yum-utils package
+- name: Install Docker | Install the yum-utils package
   ansible.builtin.package:
     name: yum-utils
     state: present
 
-- name: Add Docker repository (.rpm)
-  shell:
+- name: Install Docker | Add Docker repository (.rpm)
+  ansible.builtin.shell:
     cmd: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
   changed_when: false

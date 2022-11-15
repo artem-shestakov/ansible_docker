@@ -1,32 +1,15 @@
 ---
-- block:
-    - name: Preparation before installing
-      include_tasks: "{{ ansible_facts['os_family'] }}.yml"
-
-    - name: Install Docker engine
-      package:
-        name:
-          - docker-ce
-          - docker-ce-cli
-          - containerd.io
-        state: present
-
-    - name: Enable and start service
-      service:
-        name: docker
-        state: started
-        enabled: true
-  tags:
+- name: Install Docker
+  ansible.builtin.import_tasks: docker.yml
+  tags: 
     - docker
 
-- block:
-    - name: Init Docker Swarm
-      import_tasks: compose.yml
+- name: Install docker-compose
+  ansible.builtin.import_tasks: compose.yml
   tags:
     - compose
 
-- block:
-    - name: Setup Docker Swarm
-      import_tasks: swarm.yml
+- name: Setup Docker Swarm
+  ansible.builtin.import_tasks: swarm.yml
   tags:
     - swarm
