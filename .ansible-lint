@@ -4,5 +4,6 @@ skip_list:
 warn_list: 
   - internal-error
   - no-changed-when
+  - key-order
 exclude_paths:
   - molecule/
