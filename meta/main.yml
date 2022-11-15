@@ -21,7 +21,6 @@ galaxy_info:
   galaxy_tags:
     - docker
     - compose
-    - docker-compose
     - swarm
     - container
 

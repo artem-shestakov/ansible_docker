@@ -10,7 +10,8 @@
       - containerd.io
     state: present
 
-- block:
+- name: Install Docker | Create Docker config file
+  block:
   - name: Install Docker | Make sure the Docker daemon configuration directory exists.
     ansible.builtin.file:
       path: /etc/docker

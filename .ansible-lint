@@ -3,3 +3,6 @@ skip_list:
   - command-instead-of-shell
 warn_list: 
   - internal-error
+  - no-changed-when
+exclude_paths:
+  - molecule/

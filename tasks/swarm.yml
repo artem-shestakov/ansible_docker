@@ -1,20 +1,21 @@
 ---
 - name: Check swarm node
-  shell:
+  ansible.builtin.shell:
     cmd: docker info
   ignore_errors: true
   changed_when: false
   register: swarm_check
   check_mode: false
 
-- block:
+- name: Init Swarm
+  block:
     - name: Initialize a swarm
-      command: docker swarm init --advertise-addr {{ advertise_addr }}
+      ansible.builtin.command: docker swarm init --advertise-addr {{ advertise_addr }}
       when:
         - "swarm_check.stdout is search('Swarm: inactive')"
 
     - name: Get worker token
-      command: "docker swarm join-token {{ item }}"
+      ansible.builtin.command: "docker swarm join-token {{ item }}"
       with_items:
         - manager
         - worker
@@ -22,15 +23,16 @@
   when:
     - inventory_hostname == manager_hosts[0]
 
-- block:
+- name: Join members
+  block:
     - name: Join manager node to the cluster
-      shell:
+      ansible.builtin.shell:
         cmd: "{{ (hostvars[manager_hosts[0]].join_tokens.results[0].stdout_lines | map('trim'))[-1] }}"
       when:
         - swarm_role == "manager"
 
     - name: Join woker node to the cluster
-      shell:
+      ansible.builtin.shell:
         cmd: "{{ (hostvars[manager_hosts[0]].join_tokens.results[1].stdout_lines | map('trim'))[-1] }}"
       when:
         - swarm_role == "worker"
