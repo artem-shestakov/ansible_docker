@@ -1,8 +1,8 @@
 ---
-- name: Preparation before installing
+- name: Install Docker | Preparation before installing
   include_tasks: "{{ ansible_facts['os_family'] }}.yml"
 
-- name: Docker | Install Docker engine
+- name: Install Docker | Install Docker engine
   package:
     name:
       - docker-ce
@@ -10,7 +10,7 @@
       - containerd.io
     state: present
 
-- name: Docker | Create docker configuration file daemon.json
+- name: Install Docker | Create docker configuration file daemon.json
   ansible.builtin.template:
     src: daemon.json.j2
     dest: /etc/docker/daemon.json
@@ -19,7 +19,7 @@
     mode: '0644'
   when: docker_daemon_config is defined
 
-- name: Docker | Enable and start service
+- name: Install Docker | Enable and start service
   service:
     name: docker
     state: started

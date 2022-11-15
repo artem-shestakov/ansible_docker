@@ -1,10 +1,10 @@
 ---
-- name: Init Docker Swarm
+- name: Install Docker
   import_tasks: docker.yml
   tags:
     - docker
 
-- name: Init Docker Swarm
+- name: Install docker-compose
   import_tasks: compose.yml
   tags:
     - compose
