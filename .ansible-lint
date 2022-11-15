@@ -1,3 +1,5 @@
 ---
 skip_list:
   - command-instead-of-shell
+warn_list: 
+  - internal-error

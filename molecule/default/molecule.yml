@@ -13,5 +13,11 @@ platforms:
     pre_build_image: true
 provisioner:
   name: ansible
+  inventory:
+    hosts:
+      all:
+        hosts:
+          instance:
+            swarm_role: manager
 verifier:
   name: ansible
