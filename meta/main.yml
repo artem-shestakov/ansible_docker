@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  role_name: docker
+  role_name: artem_shestakov.docker
   author: Artem Shestakov
   description: Ansible role to install Docker + Docker compose and sinit Docker Swarm mode.
   license: license (BSD, MIT)
