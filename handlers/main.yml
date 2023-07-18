@@ -1,4 +1,11 @@
 ---
+- name: Handler | Enable and start service
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: true
+  listen: "start docker"
+
 - name: Handler | Restart docker
   ansible.builtin.service:
     name: docker

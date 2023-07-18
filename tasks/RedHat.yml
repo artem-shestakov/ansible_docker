@@ -1,20 +1,29 @@
 ---
-- name: Install Docker | Install the yum-utils package
-  ansible.builtin.package:
-    name: yum-utils
-    state: present
+- name: Install Docker
+  tags: install
+  block:
+    - name: Install Docker | Install the yum-utils package
+      ansible.builtin.package:
+        name: yum-utils
+        state: present
 
-- name: Install Docker | Add Docker repository (.rpm)
-  ansible.builtin.shell:
-    cmd: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-  changed_when: false
+    - name: Install Docker | Add Docker repository (.rpm)
+      ansible.builtin.shell:
+        cmd: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+      changed_when: false
 
-- name: Install Docker | Install Docker
-  ansible.builtin.package:
-    name:
-      - docker-ce 
-      - docker-ce-cli 
-      - containerd.io 
-      - docker-buildx-plugin 
-      - docker-compose-plugin
-    state: present
+    - name: Prefix the Docker package version with the correct separator on RedHat.
+      ansible.builtin.set_fact:
+        _docker_package_version: "-{{ docker_package_version }}"
+      when: docker_package_version is defined
+
+    - name: Install Docker | Install Docker
+      ansible.builtin.dnf:
+        name:
+          - "docker-ce{{ _docker_package_version | default('') }}"
+          - "docker-ce-cli{{ _docker_package_version | default('') }}"
+          - containerd.io 
+          - docker-buildx-plugin 
+          - docker-compose-plugin
+        state: present
+      notify: start docker
