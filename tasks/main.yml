@@ -1,8 +1,6 @@
 ---
 - name: Install Docker
   ansible.builtin.import_tasks: docker.yml
-  tags: 
-    - docker
 
 - name: Install docker-compose
   ansible.builtin.import_tasks: compose.yml
