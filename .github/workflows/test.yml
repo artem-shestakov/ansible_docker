@@ -39,6 +39,9 @@ jobs:
           - geerlingguy/docker-ubuntu2204-ansible
 
     steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        
       - name: Check out the codebase.
         uses: actions/checkout@v2
 
