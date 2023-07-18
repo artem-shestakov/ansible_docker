@@ -36,7 +36,14 @@
           - "docker-ce{{ _docker_package_version | default('') }}"
           - "docker-ce-cli{{ _docker_package_version | default('') }}"
           - containerd.io
-          - docker-compose-plugin
         update_cache: true
         state: present
+      notify: start docker
+    
+    - name: Install Docker | Install Docker plugins
+      ansible.builtin.apt:
+        name:
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        update_cache: true
       notify: start docker
