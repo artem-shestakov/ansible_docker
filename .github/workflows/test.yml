@@ -39,6 +39,9 @@ jobs:
           - geerlingguy/docker-ubuntu2204-ansible
 
     steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
       - name: Check out the codebase.
         uses: actions/checkout@v2
 
@@ -48,7 +51,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install test dependencies.
-        run: pip3 install ansible molecule[docker] pytest pytest-testinfra
+        run: pip3 install ansible molecule molecule-docker docker pytest pytest-testinfra
 
       - name: Run Molecule tests.
         run: molecule test
