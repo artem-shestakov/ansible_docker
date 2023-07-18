@@ -1,43 +1,37 @@
 ---
 - name: Install Docker | Preparation before installing
+  tags: install
   ansible.builtin.include_tasks: "{{ ansible_facts['os_family'] }}.yml"
 
-- name: Install Docker | Install Docker engine
-  ansible.builtin.package:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-    state: present
-
 - name: Install Docker | Create Docker config file
+  tags: config
   block:
-  - name: Install Docker | Make sure the Docker daemon configuration directory exists.
-    ansible.builtin.file:
-      path: /etc/docker
-      owner: root
-      group: root
-      mode: 0755
-      state: directory
+    - name: Install Docker | Make sure the Docker daemon configuration directory exists.
+      ansible.builtin.file:
+        path: /etc/docker
+        owner: root
+        group: root
+        mode: 0755
+        state: directory
 
-  - name: Install Docker | Create docker configuration file daemon.json
-    ansible.builtin.template:
-      src: daemon.json.j2
-      dest: /etc/docker/daemon.json
-      owner: root
-      group: root
-      mode: '0644'
+    - name: Install Docker | Create docker configuration file daemon.json
+      ansible.builtin.template:
+        src: daemon.json.j2
+        dest: /etc/docker/daemon.json
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Install Docker | Create Docker data directory
+      ansible.builtin.file:
+        path: "{{ docker_daemon_config['data-root'] }}"
+        owner: root
+        group: root
+        mode: 0750
+        state: directory
+      when: docker_daemon_config['data-root'] is defined
   when: docker_daemon_config is defined
   notify: restart docker
-
-- name: Install Docker | Create Docker data directory
-  ansible.builtin.file:
-    path: "{{ docker_daemon_config['data-root'] }}"
-    owner: root
-    group: root
-    mode: 0750
-    state: directory
-  when: docker_daemon_config['data-root'] is defined
 
 - name: Install Docker | Enable and start service
   ansible.builtin.service:

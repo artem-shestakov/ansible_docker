@@ -9,14 +9,25 @@
       - gnupg-agent
       - software-properties-common
 
-- name: Install Docker | Add Docker’s official GPG key
-  ansible.builtin.apt_key:
-    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-  register: aptkey
+- name: Add Docker apt key.
+  ansible.builtin.get_url:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    dest: /etc/apt/trusted.gpg.d/docker.asc
+    mode: '0644'
+    force: true
 
-- name: Install Docker | Add Docker repository (.deb)
-  ansible.builtin.shell:
-    cmd: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-  changed_when: aptkey.changed
+- name: Add Docker repository.
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+    update_cache: true
+
+- name: Install Docker | Install Docker engine
+  ansible.builtin.apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    update_cache: true
+    state: present
