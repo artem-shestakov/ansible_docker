@@ -2,10 +2,10 @@
 - name: Install Docker
   ansible.builtin.import_tasks: docker.yml
 
-- name: Install docker-compose
-  ansible.builtin.import_tasks: compose.yml
-  tags:
-    - compose
+# - name: Install docker-compose
+#   ansible.builtin.import_tasks: compose.yml
+#   tags:
+#     - compose
 
 - name: Setup Docker Swarm
   ansible.builtin.import_tasks: swarm.yml
