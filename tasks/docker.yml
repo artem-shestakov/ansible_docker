@@ -32,9 +32,3 @@
         mode: 0750
         state: directory
       when: docker_daemon_config['data-root'] is defined
-
-- name: Install Docker | Enable and start service
-  ansible.builtin.service:
-    name: docker
-    state: started
-    enabled: true

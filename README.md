@@ -7,6 +7,7 @@ Install Docker, Docker-compose and init Docker Swarm mode.
 | **advertise_iface** | Interface for swarm advertise. Default: default host interface (*ansible_default_ipv4.interface*)
 | **advertise_addr** | Swarm advertised address. Default: the address of **advertise_iface**
 | **docker_daemon_config** | Docker daemon configuration options. Use YAML format. Detail about options in [docs](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file).
+| **docker_package_version** | Version of Docker Engine. Default: none
 
 ## Example
 Simple example to install Docker, Docker Compose and init Swarm mode
