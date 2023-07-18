@@ -5,6 +5,8 @@
 
 - name: Install Docker | Create Docker config file
   tags: config
+  when: docker_daemon_config is defined
+  notify: restart docker
   block:
     - name: Install Docker | Make sure the Docker daemon configuration directory exists.
       ansible.builtin.file:
@@ -30,8 +32,6 @@
         mode: 0750
         state: directory
       when: docker_daemon_config['data-root'] is defined
-  when: docker_daemon_config is defined
-  notify: restart docker
 
 - name: Install Docker | Enable and start service
   ansible.builtin.service:

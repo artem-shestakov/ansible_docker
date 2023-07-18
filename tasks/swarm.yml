@@ -8,6 +8,8 @@
   check_mode: false
 
 - name: Init Swarm
+  when:
+    - inventory_hostname == manager_hosts[0]
   block:
     - name: Initialize a swarm
       ansible.builtin.command: docker swarm init --advertise-addr {{ advertise_addr }}
@@ -20,10 +22,11 @@
         - manager
         - worker
       register: join_tokens
-  when:
-    - inventory_hostname == manager_hosts[0]
 
 - name: Join members
+  when:
+    - "swarm_check.stdout is search('Swarm: inactive')"
+    - inventory_hostname != manager_hosts[0]
   block:
     - name: Join manager node to the cluster
       ansible.builtin.shell:
@@ -36,6 +39,3 @@
         cmd: "{{ (hostvars[manager_hosts[0]].join_tokens.results[1].stdout_lines | map('trim'))[-1] }}"
       when:
         - swarm_role == "worker"
-  when:
-    - "swarm_check.stdout is search('Swarm: inactive')"
-    - inventory_hostname != manager_hosts[0]
