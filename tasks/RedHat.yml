@@ -13,7 +13,7 @@
       changed_when: false
 
     - name: Prefix the Docker package version with the correct separator on RedHat.
-      set_fact:
+      ansible.builtin.set_fact:
         _docker_package_version: "-{{ docker_package_version }}"
       when: docker_package_version is defined
 
