@@ -33,5 +33,5 @@
         state: directory
       when: docker_daemon_config['data-root'] is defined
   
-- name: Flush handlers
-  meta: flush_handlers
+- name: Handler | Flush handlers to (re)start Docker
+  ansible.builtin.meta: flush_handlers
