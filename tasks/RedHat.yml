@@ -23,7 +23,12 @@
           - "docker-ce{{ _docker_package_version | default('') }}"
           - "docker-ce-cli{{ _docker_package_version | default('') }}"
           - containerd.io 
+        state: present
+      notify: start docker
+    
+    - name: Install Docker | Install Docker plugins
+      ansible.builtin.dnf:
+        name:
           - docker-buildx-plugin 
           - docker-compose-plugin
         state: present
-      notify: start docker
