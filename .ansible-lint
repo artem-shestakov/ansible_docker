@@ -5,7 +5,6 @@ warn_list:
   - name[casing]
   - command-instead-of-module
   - internal-error
-  # - no-changed-when
   - key-order
 exclude_paths:
   - molecule/
