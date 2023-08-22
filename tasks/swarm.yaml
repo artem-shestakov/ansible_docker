@@ -13,6 +13,8 @@
   block:
     - name: Initialize a swarm
       ansible.builtin.command: docker swarm init --advertise-addr {{ advertise_addr }}
+      register: swarm_init
+      changed_when: swarm_init.rc == 0
       when:
         - "swarm_check.stdout is search('Swarm: inactive')"
 
@@ -32,11 +34,15 @@
     - name: Join manager node to the cluster
       ansible.builtin.shell:
         cmd: "{{ (hostvars[manager_hosts[0]].join_tokens.results[0].stdout_lines | map('trim'))[-1] }}"
+      register: join_manager
+      changed_when: join_manager.rc == 0
       when:
         - swarm_role == "manager"
 
     - name: Join woker node to the cluster
       ansible.builtin.shell:
         cmd: "{{ (hostvars[manager_hosts[0]].join_tokens.results[1].stdout_lines | map('trim'))[-1] }}"
+      register: join_worker
+      changed_when: join_worker.rc == 0
       when:
         - swarm_role == "worker"

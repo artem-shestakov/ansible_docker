@@ -1,9 +1,9 @@
 ---
-- name: "Check if APACHE is installed"
-  package_facts:
+- name: version.yaml | Check if Docker is installed"
+  ansible.builtin.package_facts:
     manager: "auto"
 
-- name: "Apache result"
+- name: version.yaml | Docker update will be done
   ansible.builtin.set_fact:
     _docker_need_update: true
   when:
