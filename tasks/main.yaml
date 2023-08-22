@@ -1,8 +1,4 @@
 ---
-- name: debug
-  debug:
-    msg: "{{ ansible_distribution }}"
-
 - name: Include OS specific vars
   ansible.builtin.include_vars: "{{ ansible_facts['os_family'] }}.yaml"
 
