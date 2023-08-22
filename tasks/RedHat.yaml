@@ -1,31 +1,41 @@
 ---
-- name: Install Docker
+- name: RedHat.yaml | Install Docker
   tags: install
   block:
-    - name: Install Docker | Install the yum-utils package
+    - name: RedHat.yaml | Install the yum-utils package
       ansible.builtin.package:
         name: yum-utils
         state: present
 
-    - name: Install Docker | Add Docker repository (.rpm)
+    - name: RedHat.yaml | Add Docker repository (.rpm)
       ansible.builtin.shell:
         cmd: yum-config-manager --add-repo {{ docker_repo_url }}
       changed_when: false
 
-    - name: Check docker version
+    - name: RedHat.yaml | Check Docker package
       ansible.builtin.include_tasks: version.yaml
       when: docker_version is defined
 
-    - name: Install Docker | Install Docker
+    - name: RedHat.yaml | Install Docker
       ansible.builtin.dnf:
         name:
           - "docker-ce{{ _docker_ce_version | default('') }}"
           - "docker-ce-cli{{ _docker_ce_cli_version | default('') }}"
           - containerd.io 
         state: present
+      when: 
+        - _docker_need_update is not defined
       notify: start docker
+
+    - name: RedHat.yaml | Update Docker
+      ansible.builtin.shell: "dnf install -y docker-ce{{ _docker_ce_version }} docker-ce-cli{{ _docker_ce_cli_version }} containerd.io"
+      when: 
+        - _docker_need_update is defined
+      register: upgrade
+      changed_when: "'Nothing to do' not in upgrade"
+      notify: restart docker
     
-    - name: Install Docker | Install Docker plugins
+    - name: RedHat.yaml | Install Docker plugins
       ansible.builtin.dnf:
         name:
           - docker-buildx-plugin 

@@ -1,8 +1,8 @@
 ---
-- name: Install docker-ce
+- name: Debian.yaml | Install Docker
   tags: install
   block:
-    - name: Install Docker | Install packages to allow apt to use a repository over HTTPS
+    - name: Debian.yaml | Install packages to allow apt to use a repository over HTTPS
       ansible.builtin.apt:
         update_cache: true
         pkg:
@@ -12,24 +12,24 @@
           - gnupg-agent
           - software-properties-common
 
-    - name: Add Docker apt key.
+    - name: Debian.yaml | Add Docker apt key
       ansible.builtin.get_url:
         url: "https://download.docker.com/linux/ubuntu/gpg"
         dest: /etc/apt/trusted.gpg.d/docker.asc
         mode: '0644'
         force: true
 
-    - name: Add Docker repository.
+    - name: Debian.yaml | Add Docker repository
       ansible.legacy.apt_repository:
         repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
         state: present
         update_cache: true
 
-    - name: Check docker version
+    - name: Debian.yaml | Check Docker package
       ansible.builtin.include_tasks: version.yaml
       when: docker_version is defined
 
-    - name: Install Docker | Install Docker engine
+    - name: Debian.yaml | Install Docker engine
       ansible.builtin.apt:
         name:
           - "docker-ce{{ _docker_ce_version | default('') }}"
@@ -37,9 +37,18 @@
           - containerd.io
         update_cache: true
         state: present
+      when: _docker_need_update is not defined
       notify: start docker
+
+    - name: Debian.yaml | Update Docker
+      ansible.builtin.shell: "apt-get install -y docker-ce{{ _docker_ce_version }} docker-ce-cli{{ _docker_ce_cli_version }} containerd.io"
+      when: 
+        - _docker_need_update is defined
+      register: upgrade
+      changed_when: "'Nothing to do' not in upgrade"
+      notify: restart docker
     
-    - name: Install Docker | Install Docker plugins
+    - name: Debian.yaml | Install Docker plugins
       ansible.builtin.apt:
         name:
           - docker-buildx-plugin
