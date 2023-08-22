@@ -1,5 +1,5 @@
 ---
-- name: Install Docker
+- name: Install docker-ce
   tags: install
   block:
     - name: Install Docker | Install packages to allow apt to use a repository over HTTPS
@@ -25,15 +25,14 @@
         state: present
         update_cache: true
 
-    - name: Prefix the Docker package version with the correct separator on RedHat.
-      ansible.builtin.set_fact:
-        _docker_package_version: "={{ docker_package_version }}"
-      when: docker_package_version is defined
+    - name: Check docker version
+      ansible.builtin.include_tasks: version.yaml
+      when: docker_version is defined
 
     - name: Install Docker | Install Docker engine
       ansible.builtin.apt:
         name:
-          - "docker-ce{{ _docker_package_version | default('') }}"
+          - "docker-ce{{ _docker_ce_version | default('') }}"
           - "docker-ce-cli{{ _docker_package_version | default('') }}"
           - containerd.io
         update_cache: true
