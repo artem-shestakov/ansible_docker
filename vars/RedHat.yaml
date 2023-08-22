@@ -1,0 +1,5 @@
+---
+docker_repo_url: https://download.docker.com/linux/centos/docker-ce.repo
+
+show_version_cmd: yum list {{ item }} --showduplicates | sort -r | awk '{ print $2 }' | grep {{ docker_version }}
+version_delimiter: "-"

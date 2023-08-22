@@ -1,0 +1,3 @@
+---
+show_version_cmd: apt-cache madison {{ item }} | awk '{ print $3 }' | grep {{ docker_version }}
+version_delimiter: "="
