@@ -1,0 +1,30 @@
+---
+- name: version.yaml | Check if Docker is installed"
+  ansible.builtin.package_facts:
+    manager: "auto"
+
+- name: version.yaml | Docker update will be done
+  ansible.builtin.set_fact:
+    _docker_need_update: true
+  when:
+    - "'docker-ce' in ansible_facts.packages and ansible_facts.packages['docker-ce'][0]['version'] != docker_version"
+    - "'docker-ce-cli' in ansible_facts.packages and ansible_facts.packages['docker-ce-cli'][0]['version'] != docker_version"
+
+- name: version.yaml | Get packages version
+  ansible.builtin.shell: "{{ show_version_cmd }}"
+  register: docker_package_version
+  changed_when: false
+  failed_when: false
+  with_items:
+    - docker-ce
+    - docker-ce-cli
+
+- name: version.yaml | Set docker-ce version.
+  ansible.builtin.set_fact:
+    _docker_ce_version: "{{ version_delimiter }}{{ docker_package_version.results[0].stdout }}"
+  when: docker_package_version is defined
+
+- name: version.yaml | Set docker-ce-cli version.
+  ansible.builtin.set_fact:
+    _docker_ce_cli_version: "{{ version_delimiter }}{{ docker_package_version.results[1].stdout }}"
+  when: docker_package_version is defined
