@@ -42,5 +42,18 @@ provisioner:
           instance03:
         vars:
           swarm_role: worker
+      swarm:
+        children:
+          managers:
+          workers:
+        vars:
+          docker_daemon_config:
+            data-root: "/docker"
+            log-driver: "json-file"
+            log-opts:
+              max-file: "2"
+              max-size: "100m"
 verifier:
-  name: ansible
+  name: testinfra
+  options:
+    v: 2
