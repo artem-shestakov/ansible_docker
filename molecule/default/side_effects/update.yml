@@ -1,0 +1,25 @@
+---
+- name: Side_effect
+  hosts: all
+  pre_tasks:
+    - name: Find available Docker versions | Red Hat
+      ansible.builtin.shell: "yum list docker-ce --showduplicates | sort -r | awk '{print $2}'"
+      register: docker_versions
+      when: ansible_facts['os_family'] == "RedHat"
+      changed_when: false
+    
+    - name: Find available Docker versions | Debian
+      ansible.builtin.shell: "apt-cache madison docker-ce | awk '{ print $3 }'"
+      register: docker_versions
+      when: ansible_facts['os_family'] == "Debian"
+      changed_when: false
+
+    - name: Available version
+      debug:
+        msg: "Version {{ docker_versions.stdout_lines[3] | regex_search('\\d:(\\d+.\\d+.\\d+).*', '\\1') | first }} will be installed"
+        
+    - name: Set Docker version to Update
+      ansible.builtin.set_fact:
+        docker_version: "{{ docker_versions.stdout_lines[3] | regex_search('\\d:(\\d+.\\d+.\\d+).*', '\\1') | first }}"
+  roles:
+    - "ansible_docker"

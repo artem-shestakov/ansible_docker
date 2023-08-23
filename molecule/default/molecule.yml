@@ -57,3 +57,19 @@ verifier:
   name: testinfra
   options:
     v: 2
+scenario:
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - verify test_docker/
+    - idempotence
+    - side_effect side_effects/update.yml
+    - verify test_docker/
+    - verify
+    - cleanup
+    - destroy
