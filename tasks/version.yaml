@@ -7,8 +7,10 @@
   ansible.builtin.set_fact:
     _docker_need_update: true
   when:
-    - "'docker-ce' in ansible_facts.packages and ansible_facts.packages['docker-ce'][0]['version'] != docker_version"
-    - "'docker-ce-cli' in ansible_facts.packages and ansible_facts.packages['docker-ce-cli'][0]['version'] != docker_version"
+    - "'docker-ce' in ansible_facts.packages"
+    - ansible_facts.packages['docker-ce'][0]['version'] | regex_search('^(.*:)?(\\d+.\\d+.\\d+).*$', '\\2') | first != docker_version
+    - "'docker-ce-cli' in ansible_facts.packages"
+    - ansible_facts.packages['docker-ce-cli'][0]['version'] | regex_search('^(.*:)?(\\d+.\\d+.\\d+).*$', '\\2') | first != docker_version
 
 - name: version.yaml | Get packages version
   ansible.builtin.shell: "{{ show_version_cmd }}"

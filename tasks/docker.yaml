@@ -29,7 +29,7 @@
         path: "{{ docker_daemon_config['data-root'] }}"
         owner: root
         group: root
-        mode: 0750
+        mode: 0710
         state: directory
       when: docker_daemon_config['data-root'] is defined
   

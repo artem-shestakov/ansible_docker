@@ -2,3 +2,7 @@
 .vagrant
 .vscode
 key**
+
+# Python
+.venv
+__pycache__
