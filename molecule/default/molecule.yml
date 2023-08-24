@@ -4,7 +4,23 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: instance
+  - name: instance01
+    image: ${MOLECULE_PLATFORM_IMAGE:-"artemshestakov/almalinux-8-docker:latest"}
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+  - name: instance02
+    image: ${MOLECULE_PLATFORM_IMAGE:-"artemshestakov/almalinux-8-docker:latest"}
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    cgroupns_mode: host
+    privileged: true
+    pre_build_image: true
+  - name: instance03
     image: ${MOLECULE_PLATFORM_IMAGE:-"artemshestakov/almalinux-8-docker:latest"}
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -16,9 +32,44 @@ provisioner:
   name: ansible
   inventory:
     hosts:
-      all:
+      managers:
         hosts:
-          instance:
+          instance01:
             swarm_role: manager
+      workers:
+        hosts:
+          instance02:
+          instance03:
+        vars:
+          swarm_role: worker
+      swarm:
+        children:
+          managers:
+          workers:
+        vars:
+          docker_daemon_config:
+            data-root: "/docker"
+            log-driver: "json-file"
+            log-opts:
+              max-file: "2"
+              max-size: "100m"
 verifier:
-  name: ansible
+  name: testinfra
+  options:
+    v: 2
+scenario:
+  test_sequence:
+    - dependency
+    - cleanup
+    - destroy
+    - syntax
+    - create
+    - prepare
+    - converge
+    - verify test_docker/
+    - idempotence
+    - side_effect side_effects/update.yml
+    - verify test_docker/
+    - verify
+    - cleanup
+    - destroy
