@@ -16,7 +16,7 @@
         
     - name: Set Docker version to Update
       ansible.builtin.set_fact:
-        docker_version: "{{ docker_versions_redhat.stdout_lines[0] | regex_search('\\d:(\\d+.\\d+.\\d+).*', '\\1') | first if docker_versions_debian.skipped else docker_versions_debian.stdout_lines[0] | regex_search('\\d:(\\d+.\\d+.\\d+).*', '\\1') | first }}"
+        docker_version: "{{ docker_versions_redhat.stdout_lines[0] | regex_search('\\d:(\\d+.\\d+.\\d+).*', '\\1') | first if 'skipped' in docker_versions_debian else docker_versions_debian.stdout_lines[0] | regex_search('\\d:(\\d+.\\d+.\\d+).*', '\\1') | first }}"
 
     - name: Selected version
       debug:
