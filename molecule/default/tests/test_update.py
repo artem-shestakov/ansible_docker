@@ -17,7 +17,7 @@ def test_update(host, AnsibleFacts):
         cmd = host.run("yum list docker-ce --showduplicates | sort -r | awk '{print $2}'")
     else:
         cmd = host.run("apt-cache madison docker-ce | awk '{ print $3 }'")
-    result = re.match(r'\d:(\d+.\d+.\d+).*', cmd.stdout.split()[3])
+    result = re.match(r'\d:(\d+.\d+.\d+).*', cmd.stdout.split()[0])
     desired_version = result.group(1)
     cmd = host.run("docker -v")
     current_version = re.match(r'Docker version (\d+.\d+.\d+).*', cmd.stdout)
